@@ -30,7 +30,7 @@ var requestHandler = function(request, response) {
   console.log('Serving request type ' + request.method + ' for url ' + request.url);
 
   // The outgoing status.
-  var statusCode = 200;
+  var statusCode;
 
   // See the note below about CORS headers.
   var headers = defaultCorsHeaders;
@@ -39,11 +39,37 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'text/plain';
+  headers['Content-Type'] = 'application/JSON';
 
+  let dataBase = {
+    results: []
+  }
+
+  if (request.method === 'GET' && request.url === "/classes/messages") {
+    statusCode = 200;
+    response.writeHead(statusCode, headers);
+    // console.log(dataBase)
+    response.end(JSON.stringify(dataBase));
+  } else if (request.method === 'POST' && request.url === "/classes/messages") {
+    statusCode = 201;
+    response.writeHead(statusCode, headers);
+    let message = '';
+    request.on('data', chunk => {
+      message += chunk;
+    }).on('end', () => {
+      dataBase.results.push(JSON.parse(message));
+      console.log(dataBase.results)
+    })
+    response.end(JSON.stringify(dataBase));
+  } else {
+    statusCode = 404;
+    response.end()
+  }
+  
+
+  
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
 
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
@@ -52,7 +78,6 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end('Hello, World!');
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -71,3 +96,4 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
+module.exports = requestHandler;
