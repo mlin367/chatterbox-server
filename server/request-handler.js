@@ -12,8 +12,9 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 let dataBase = {
-  results: [{username: "Jesus", roomname: "lobby", text: "Yeet"}]
+  results: []
 }
+let count = 0;
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -60,7 +61,8 @@ var requestHandler = function(request, response) {
     }).on('end', () => {
       // console.log(message)
       dataBase.results.push(JSON.parse(message));
-      dataBase.results[dataBase.results.length - 1].objectId = Math.random();
+      dataBase.results[dataBase.results.length - 1].objectId = count;
+      count += 1;
       console.log(dataBase)
       // console.log(dataBase.results)
     })
