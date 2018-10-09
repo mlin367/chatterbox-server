@@ -167,7 +167,7 @@ var app = {
     $message.text(message.text).appendTo($chat);
 
     // Add the message to the UI
-    app.$chats.append($chat);
+    app.$chats.prepend($chat);
 
   },
 
@@ -218,7 +218,6 @@ var app = {
       username: app.username,
       text: app.$message.val(),
       roomname: app.roomname || 'lobby',
-      objectId: app.lastMessageId++ 
     };
 
     app.send(message);

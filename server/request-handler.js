@@ -58,8 +58,10 @@ var requestHandler = function(request, response) {
     request.on('data', chunk => {
       message += chunk;
     }).on('end', () => {
-      console.log(message)
+      // console.log(message)
       dataBase.results.push(JSON.parse(message));
+      dataBase.results[dataBase.results.length - 1].objectId = Math.random();
+      console.log(dataBase)
       // console.log(dataBase.results)
     })
     response.end();
