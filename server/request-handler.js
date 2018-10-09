@@ -12,7 +12,7 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 let dataBase = {
-  results: []
+  results: [{username: "Jesus", roomname: "lobby", text: "Yeet"}]
 }
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -43,8 +43,11 @@ var requestHandler = function(request, response) {
   // other than plain text, like JSON or HTML.
   headers['Content-Type'] = 'application/JSON';
 
-
-  if (request.method === 'GET' && request.url === "/classes/messages") {
+  if (request.method === 'OPTIONS' && request.url === "/classes/messages"){
+    statusCode = 200;
+    response.writeHead(statusCode, headers);
+    response.end()
+  } else if (request.method === 'GET' && request.url === "/classes/messages") {
     statusCode = 200;
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify(dataBase));
