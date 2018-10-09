@@ -11,7 +11,9 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+let dataBase = {
+  results: []
+}
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -41,14 +43,10 @@ var requestHandler = function(request, response) {
   // other than plain text, like JSON or HTML.
   headers['Content-Type'] = 'application/JSON';
 
-  let dataBase = {
-    results: []
-  }
 
   if (request.method === 'GET' && request.url === "/classes/messages") {
     statusCode = 200;
     response.writeHead(statusCode, headers);
-    // console.log(dataBase)
     response.end(JSON.stringify(dataBase));
   } else if (request.method === 'POST' && request.url === "/classes/messages") {
     statusCode = 201;
@@ -57,16 +55,17 @@ var requestHandler = function(request, response) {
     request.on('data', chunk => {
       message += chunk;
     }).on('end', () => {
+      console.log(message)
       dataBase.results.push(JSON.parse(message));
-      console.log(dataBase.results)
+      // console.log(dataBase.results)
     })
-    response.end(JSON.stringify(dataBase));
+    response.end();
   } else {
     statusCode = 404;
+    response.writeHead(statusCode, headers);
     response.end()
   }
   
-
   
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -96,4 +95,4 @@ var defaultCorsHeaders = {
   'access-control-max-age': 10 // Seconds.
 };
 
-module.exports = requestHandler;
+module.exports.requestHandler = requestHandler;
